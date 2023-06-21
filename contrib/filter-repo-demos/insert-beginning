@@ -21,6 +21,7 @@ near the top of git-filter-repo.
 import argparse
 import os
 import subprocess
+import platform
 try:
   import git_filter_repo as fr
 except ImportError:
@@ -35,7 +36,7 @@ if not args.file:
   raise SystemExit("Error: Need to specify the --file option")
 
 fhash = subprocess.check_output(['git', 'hash-object', '-w', args.file]).strip()
-fmode = b'100755' if os.access(args.file, os.X_OK) else b'100644'
+fmode = b'100755' if os.access(args.file, os.X_OK) and platform.system() != "Windows" else b'100644'
 # FIXME: I've assumed the file wasn't a directory or symlink...
 
 def fixup_commits(commit, metadata):
