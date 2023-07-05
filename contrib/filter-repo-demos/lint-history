@@ -141,7 +141,7 @@ def lint_with_real_filenames(commit, metadata):
 
 def lint_non_binary_blobs(blob, metadata):
   if not b"\0" in blob.data[0:8192]:
-    filename = '.git/info/tmpfile'
+    filename = '.git/info/tmpfile' if os.path.isdir('.git') else 'info/tmpfile'
     with open(filename, "wb") as f:
       f.write(blob.data)
     subprocess.check_call(lint_args.command + [filename])
