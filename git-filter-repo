@@ -3915,7 +3915,7 @@ class RepoFilter(object):
   def get_exported_and_imported_refs(self):
     return self._parser.get_exported_and_imported_refs()
 
-  def run(self):
+  def run(self, finish_callback=None):
     start = time.time()
     if not self._input and not self._output:
       self._run_sanity_checks()
@@ -3978,6 +3978,9 @@ class RepoFilter(object):
 
       # Write out data about run
       self._record_metadata(self.results_tmp_dir(), self._orig_refs)
+
+    if finish_callback:
+      finish_callback()
 
     # Final cleanup:
     #   If we need a repack, then nuke the reflogs and repack.

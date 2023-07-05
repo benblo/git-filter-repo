@@ -163,10 +163,11 @@ if lint_args.filenames_important:
   cat_file_process = subprocess.Popen(['git', 'cat-file', '--batch'],
                                       stdin = subprocess.PIPE,
                                       stdout = subprocess.PIPE)
+  def close_cat_file_process():
+    cat_file_process.stdin.close()
+    cat_file_process.wait()
   filter = fr.RepoFilter(args, commit_callback=lint_with_real_filenames)
-  filter.run()
-  cat_file_process.stdin.close()
-  cat_file_process.wait()
+  filter.run(finish_callback=close_cat_file_process)
 else:
   filter = fr.RepoFilter(args, blob_callback=lint_non_binary_blobs)
   filter.run()
